@@ -3,6 +3,7 @@ const DIR_MUESTRAS_LSTM_URL = './MuestrasLSTM'
 const DIR_MODELOS_MLP_URL = './ModelosMLP'
 const DIR_MUESTRAS_MLP_URL = './MuestrasMLP'
 const PTO_MEDIDA_URL = 'pmed_ubicacion.kml'
+const CONF_URL = 'configuracion.json'
 //Falta generar un kml unicamente con los ptos de medida que tengan modelo
 
 let modeloLSTM = []

@@ -5,7 +5,7 @@ async function initSlider(){
     // let slider = document.getElementById("slider")
     let output = document.getElementById("pie")
 
-    let conf= await (await fetch('./configuracion.json')).json()
+    let conf= await (await fetch(CONF_URL)).json()
     let min = conf['fechaInicio']
     let max = min + (conf['periodicidad'] * (conf['numeroMuestras'] - 1) )
 
