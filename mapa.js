@@ -4,7 +4,6 @@ const DIR_MODELOS_MLP_URL = './ModelosMLP'
 const DIR_MUESTRAS_MLP_URL = './MuestrasMLP'
 const PTO_MEDIDA_URL = 'pmed_ubicacion.kml'
 const CONF_URL = 'configuracion.json'
-//Falta generar un kml unicamente con los ptos de medida que tengan modelo
 
 let modeloLSTM = []
 let sampleLSTM = []
@@ -44,7 +43,6 @@ async function initMap(){
             })
         })
 
-        //vectorSource.on('change', coloreaMarcas)
         console.log("Inicializacion mapa finalizada")
         
     } catch (err) {
@@ -58,7 +56,7 @@ function radButClick(){
 
 function coloreaMarcas(){
     if (vectorSource.getState() == 'ready' && ! coloreando ){
-        coloreando = true    // FIXME es util?
+        coloreando = true
         let extent = map.getView().calculateExtent(map.getSize())
         vectorSource.forEachFeatureInExtent(extent, coloreaUnaMarca)
         coloreando = false
@@ -167,11 +165,9 @@ async function lanzaPrevision(feature){
         
         console.log ('lanzaPrevision mitad', tipoModelo, id)
         
-        //let t = tf.tensor3d(s.data) //FIXME tf.tidy tf.dispose
-        let t = tf.tensor(s.data) //FIXME tf.tidy tf.dispose
+        let t = tf.tensor(s.data)
         m.predict(t).data().then( function (v) {
             let i = indiceFecha()
-            //let tipoModelo = document.querySelector('input[name="modelo"]:checked').value
             
             console.log('calcula Modelo', tipoModelo, id)
             switch (tipoModelo) {
