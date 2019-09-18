@@ -13,7 +13,6 @@ let sampleMLP = []
 let previsionMLP = []
 let map
 let vectorSource
-let coloreando = false
 
 let slider = document.getElementById("slider")
 
@@ -55,12 +54,8 @@ function radButClick(){
 }
 
 function coloreaMarcas(){
-    if (vectorSource.getState() == 'ready' && ! coloreando ){
-        coloreando = true
-        let extent = map.getView().calculateExtent(map.getSize())
-        vectorSource.forEachFeatureInExtent(extent, coloreaUnaMarca)
-        coloreando = false
-    }
+    let extent = map.getView().calculateExtent(map.getSize())
+    vectorSource.forEachFeatureInExtent(extent, coloreaUnaMarca)
 }
 
 function coloreaUnaMarca(feature){
@@ -189,7 +184,7 @@ async function lanzaPrevision(feature){
     }
 }
 
-function indiceFecha () {
+function indiceFecha() {
     return (slider.value - slider.min ) / slider.step
 }
 
