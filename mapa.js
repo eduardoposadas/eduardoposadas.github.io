@@ -61,11 +61,7 @@ function coloreaMarcas(){
 function coloreaUnaMarca(feature){
     cargaDatosPrevision(feature).then(
         cargaModelo(feature).then(
-            function(feature){                
-                let id = parseInt(feature.get('id'))
-                console.log("Promesa cargaModelo", id)
-                lanzaPrevision(feature)
-            }
+            lanzaPrevision(feature)
         )
     )
     console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
