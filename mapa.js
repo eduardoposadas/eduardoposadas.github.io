@@ -64,7 +64,7 @@ function coloreaUnaMarca(feature){
             lanzaPrevision(feature)
         )
     )
-    console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
+    //console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
 }
 
 async function cargaDatosPrevision(feature){
