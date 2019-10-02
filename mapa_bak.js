@@ -4,6 +4,7 @@ const DIR_MODELOS_MLP_URL = './ModelosMLP'
 const DIR_MUESTRAS_MLP_URL = './MuestrasMLP'
 const PTO_MEDIDA_URL = 'pmed_ubicacion.kml'
 const CONF_URL = 'configuracion.json'
+//Falta generar un kml unicamente con los ptos de medida que tengan modelo
 
 let modeloLSTM = []
 let sampleLSTM = []
@@ -13,6 +14,7 @@ let sampleMLP = []
 let previsionMLP = []
 let map
 let vectorSource
+let coloreando = false
 
 let slider = document.getElementById("slider")
 
@@ -42,6 +44,7 @@ async function initMap(){
             })
         })
 
+        //vectorSource.on('change', coloreaMarcas)
         console.log("Inicializacion mapa finalizada")
         
     } catch (err) {
@@ -54,17 +57,25 @@ function radButClick(){
 }
 
 function coloreaMarcas(){
-    let extent = map.getView().calculateExtent(map.getSize())
-    vectorSource.forEachFeatureInExtent(extent, coloreaUnaMarca)
+    if (vectorSource.getState() == 'ready' && ! coloreando ){
+        coloreando = true    // FIXME es util?
+        let extent = map.getView().calculateExtent(map.getSize())
+        vectorSource.forEachFeatureInExtent(extent, coloreaUnaMarca)
+        coloreando = false
+    }
 }
 
 function coloreaUnaMarca(feature){
     cargaDatosPrevision(feature).then(
         cargaModelo(feature).then(
-            lanzaPrevision(feature)
+            function(feature){                
+                let id = parseInt(feature.get('id'))
+                console.log("Promesa cargaModelo", id)
+                lanzaPrevision(feature)
+            }
         )
     )
-    //console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
+    console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
 }
 
 async function cargaDatosPrevision(feature){
@@ -81,7 +92,6 @@ async function cargaDatosPrevision(feature){
                 url= DIR_MUESTRAS_LSTM_URL + '/' + id + '.json'
                 console.log("Pidiendo ", id, " ", url)
                 sampleLSTM[id] = await (await fetch(url)).json()
-                console.log("Pidiendo Fin",id,url, sampleLSTM[id])
                 return feature
 
             case 'MLP':
@@ -157,9 +167,11 @@ async function lanzaPrevision(feature){
         
         console.log ('lanzaPrevision mitad', tipoModelo, id)
         
-        let t = tf.tensor(s.data)
+        //let t = tf.tensor3d(s.data) //FIXME tf.tidy tf.dispose
+        let t = tf.tensor(s.data) //FIXME tf.tidy tf.dispose
         m.predict(t).data().then( function (v) {
             let i = indiceFecha()
+            //let tipoModelo = document.querySelector('input[name="modelo"]:checked').value
             
             console.log('calcula Modelo', tipoModelo, id)
             switch (tipoModelo) {
@@ -181,7 +193,7 @@ async function lanzaPrevision(feature){
     }
 }
 
-function indiceFecha() {
+function indiceFecha () {
     return (slider.value - slider.min ) / slider.step
 }
 
