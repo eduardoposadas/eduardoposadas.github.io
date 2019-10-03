@@ -41,7 +41,17 @@ async function initMap(){
                 zoom: 18
             })
         })
+        
+        map.once('rendercomplete', function(event) {
+            console.log('Fin carga mapa')
+        });
 
+        vectorSource.once('change', function(event) {
+            if (vectorSource.getState() == 'ready') {
+                console.log('Fin carga KML. Lanzo coloreado inicial.')
+                coloreaMarcas()
+            }
+        });
         console.log("Inicializacion mapa finalizada")
         
     } catch (err) {
@@ -60,11 +70,9 @@ function coloreaMarcas(){
 
 function coloreaUnaMarca(feature){
     cargaDatosPrevision(feature).then(
-        cargaModelo(feature).then(
-            lanzaPrevision(feature)
-        )
-    )
-    //console.log('coloreaUnaMarca Fin: ', parseInt(feature.get('id')) )
+        feature => cargaModelo(feature)).then(
+            feature => lanzaPrevision(feature)
+        ).catch(error => console.log('Error lanzamiento coloreado', feature.get('id'), 'Error:',error))
 }
 
 async function cargaDatosPrevision(feature){
@@ -81,7 +89,6 @@ async function cargaDatosPrevision(feature){
                 url= DIR_MUESTRAS_LSTM_URL + '/' + id + '.json'
                 console.log("Pidiendo ", id, " ", url)
                 sampleLSTM[id] = await (await fetch(url)).json()
-                console.log("Pidiendo Fin",id,url, sampleLSTM[id])
                 return feature
 
             case 'MLP':
@@ -154,9 +161,7 @@ async function lanzaPrevision(feature){
             asignaColor(feature, p[i])
             return
         }
-        
-        console.log ('lanzaPrevision mitad', tipoModelo, id)
-        
+
         let t = tf.tensor(s.data)
         m.predict(t).data().then( function (v) {
             let i = indiceFecha()
