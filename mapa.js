@@ -1,7 +1,7 @@
-const DIR_MODELOS_LSTM_URL = './ModelosLSTM'
-const DIR_MUESTRAS_LSTM_URL = './MuestrasLSTM'
-const DIR_MODELOS_MLP_URL = './ModelosMLP'
-const DIR_MUESTRAS_MLP_URL = './MuestrasMLP'
+const DIR_MODELOS_LSTM_URL = 'ModelosLSTM/'
+const DIR_MUESTRAS_LSTM_URL = 'MuestrasLSTM/'
+const DIR_MODELOS_MLP_URL = 'ModelosMLP/'
+const DIR_MUESTRAS_MLP_URL = 'MuestrasMLP/'
 const PTO_MEDIDA_URL = 'pmed_ubicacion.kml'
 const CONF_URL = 'configuracion.json'
 
@@ -41,6 +41,11 @@ async function initMap(){
                 zoom: 18
             })
         })
+
+        map.on('moveend', function(event) {
+            console.log('Movimiento de mapa. Lanzo coloreado.')
+            coloreaMarcas()
+        });
         
         map.once('rendercomplete', function(event) {
             console.log('Fin carga mapa')
