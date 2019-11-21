@@ -1,6 +1,6 @@
 {
-    "fechaInicio" : 1572480000,
-    "_fechaInicio_comentario" : "date -d '2019/08/1 00:00 UTC' +%s",
+    "fechaInicio" : 1572739200,
+    "_fechaInicio_comentario" : "date -d '2019/11/3 00:00 UTC' +%s",
 
     "numeroMuestras" : 2688,
     "_numeroMuestras_comentario" : "Num. de muestras que se van a usar para la prediccion y la visualizacion. 4 * 24 * 28 = 2688, 28 dias con 4 muestras por hora",
